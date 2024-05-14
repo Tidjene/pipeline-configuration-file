@@ -1,0 +1,89 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1                  # Version de l'API Tekton utilisée
+kind: EventListener                                       # Type d'objet : Écouteur d'événements
+metadata:
+  name: github-listener                                   # Nom de l'écouteur d'événements
+  namespace: pfe
+spec:
+  triggers:                                               # Définition des déclencheurs d'événements
+    - name: github-listener                               # Nom du déclencheur
+      interceptors:                                       # Intercepteurs pour traiter les événements entrants
+        - ref:
+            name: "github"                                # Référence à l'intercepteur "github"
+          params:                                         # Paramètres de l'intercepteur
+            - name: "secretRef"                           # Nom du secret de référence
+              value:                                      # Valeur du secret
+                secretName: github-secret                 # Nom du secret
+                secretKey: secretToken                    # Clé secrète pour l'authentification
+            - name: "eventTypes"                          # Types d'événements à intercepter
+              value: ["push"]                             # Liste des types d'événements (dans ce cas, "push")
+      bindings:                                           # Liens vers les déclencheurs
+        - ref: github-push-binding                        # Référence au lien "github-push-binding"
+      template:                                           # Modèle à utiliser pour gérer les événements
+        ref: github-template                              # Référence au modèle "github-template"
+  resources:                                              # Ressources à surveiller
+    kubernetesResource:                                   # Ressource Kubernetes surveillée
+      spec:                                               # Spécification de la ressource
+        template:                                         # Modèle de spécification
+          spec:                                           # Spécification du modèle
+            serviceAccountName: tekton-triggers-test      # Nom du compte de service Kubernetes
+            containers:                                   # Conteneurs à exécuter
+              - resources:                                # Ressources allouées aux conteneurs
+                  requests:                               # Ressources demandées par le conteneur
+                    memory: "64Mi"                        # Mémoire demandée
+                    cpu: "250m"                           # Puissance CPU demandée
+                  limits:                                 # Limites maximales des ressources du conteneur
+                    memory: "128Mi"                       # Limite mémoire
+                    cpu: "500m"                           # Limite CPU
+---
+apiVersion: triggers.tekton.dev/v1alpha1                  # Version de l'API Tekton utilisée
+kind: TriggerBinding                                      # Type d'objet : Liaison de déclencheur
+metadata: 
+  name: github-push-binding 
+  namespace: pfe                              # Nom de la liaison de déclencheur
+spec:
+  params:                                                 # Paramètres de la liaison de déclencheur
+    - name: gitrevision                                   # Nom du paramètre pour la révision Git
+      value: $(body.after)                                # Valeur du paramètre (après le push)
+    - name: gitrepositoryurl                              # Nom du paramètre pour l'URL du dépôt Git
+      value: $(body.repository.clone_url)                 # Valeur de l'URL du dépôt Git
+---
+apiVersion: triggers.tekton.dev/v1alpha1                  # Version de l'API Tekton utilisée
+kind: TriggerTemplate                                     # Type d'objet : Modèle de déclencheur
+metadata:
+  name: github-template                                   # Nom du modèle de déclencheur
+  namespace: pfe
+spec:
+  params:                                                 # Paramètres du modèle de déclencheur
+    - name: gitrevision                                   # Nom du paramètre pour la révision Git
+    - name: gitrepositoryurl                              # Nom du paramètre pour l'URL du dépôt Git
+  resourceTemplates:                                      # Modèles de ressources à utiliser
+    - apiVersion: tekton.dev/v1beta1                      # Version de l'API Tekton pour la ressource
+      kind: PipelineRun                                   # Type de la ressource : Exécution de pipeline
+      metadata:
+        generateName: our-pipeline-ci-cd-run-               # Préfixe pour les noms générés des exécutions de pipeline
+      spec:
+        pipelineRef:                                      # Référence au pipeline à exécuter
+          name: our-pipeline-ci-cd                          # Nom du pipeline
+        podTemplate:                                      # Modèle de pod pour l'exécution du pipeline
+          securityContext:                                # Contexte de sécurité du pod
+            fsGroup: 65532                                # GID du groupe pour les volumes montés
+        workspaces:                                       # Espaces de travail utilisés par le pipeline
+          - name: shared-data                             # Nom de l'espace de travail partagé
+            volumeClaimTemplate:                          # Modèle de demande de revendication de volume
+              spec:                                       # Spécification de la demande de revendication de volume
+                accessModes:                              # Modes d'accès au volume
+                  - ReadWriteOnce                         # Mode de lecture-écriture unique
+                resources:                                # Ressources allouées au volume
+                  requests:                               # Ressources demandées pour le volume
+                    storage: 2Gi                          # Taille du stockage demandée (2 gigaoctets)
+          - name: docker-credentials                      # Nom de l'espace de travail pour les informations d'identification Docker
+            secret:                                       # Spécification d'un secret Kubernetes
+              secretName: docker-credentials              # Nom du secret contenant les informations d'identification Docker
+        params:                                           # Paramètres à fournir au pipeline
+          - name: repo-url                                                           # Nom du paramètre pour l'URL du dépôt
+            value: https://github.com/KhouloudBrn/pipeline-DevSecOps.git                             # Valeur de l'URL du dépôt
+          - name: image-reference-front                                                   # Nom du paramètre pour la référence d'image
+            value: tidix/public:frontend_image                                         # Valeur de la référence d'image
+          - name: image-reference-back                                                 # Nom du paramètre pour la référence d'image
+            value: tidix/public:backend_image

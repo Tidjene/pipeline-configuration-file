@@ -1,0 +1,74 @@
+apiVersion: tekton.dev/v1beta1                                                    
+kind: Pipeline                                                                   
+metadata:
+  name: clone-build-push  
+  namespace: pfe  
+  annotations:
+    tekton.dev/pipeline-taskrun-timeout: 3h                               
+spec:
+  description: |                                                      
+    Cet espace de travail contient les fichiers du dépôt clonés, afin qu'ils puissent être lus par le
+    prochaine tâche
+  params:                                                                     
+    - name: repo-url                                                            
+      type: string                                                       
+    - name: image-reference-front                                             
+      type: string                                                             
+    - name: image-reference-back                                                  
+      type: string 
+  workspaces:                                              
+    - name: shared-data                            
+    - name: docker-credentials                            
+  tasks:                                                            
+    - name: clonage-du-depot     
+      taskRef:
+        name: git-clone           
+      workspaces:
+        - name: output                                                           
+          workspace: shared-data                                         
+      params:                                                                   
+        - name: url                                                      
+          value: $(params.repo-url)                                   
+    - name: build-and-push-front-end          
+      runAfter: ["clonage-du-depot"]                                              
+      taskRef:
+        name: kaniko                                                     
+      workspaces:
+        - name: source                                               
+          workspace: shared-data         
+          subPath: "1_welcome/interne/Serv 6 chatbot/chatbot-main/chatbot-main"
+        - name: dockerconfig                                                     
+          workspace: docker-credentials                                       
+      params:                                                                
+        - name: IMAGE                                                           
+          value: $(params.image-reference-front)      
+                                            
+    - name: build-and-push-backend                                                       
+      runAfter: ["build-and-push-front-end"]                       
+      taskRef:
+        name: kaniko                                                
+      workspaces:
+        - name: source                                               
+          workspace: shared-data                                                
+          subPath: back
+        - name: dockerconfig                                     
+          workspace: docker-credentials       
+      params:                                                                  
+        - name: IMAGE                                                         
+          value: $(params.image-reference-back) 
+    - name: deployment                                                       
+      runAfter: ["build-and-push-backend"]                       
+      taskRef:
+        name: helm-upgrade-from-repo                                                     
+      params:                                                                  
+        - name: helm_repo
+          value: 
+        - name: chart_name
+          value: ...../....
+        - name: release_version
+          value: .....
+        - name: release_name
+          value: .....
+        - name: overwrite_values
+          value: autoscaling.enabled=true,autoscaling.maxReplicas=3                                      
+                                      

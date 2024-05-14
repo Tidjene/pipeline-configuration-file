@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: pfe
+  labels:
+    app: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: "tidix/public:frontend-image"
+        envFrom:
+        - configMapRef:
+            name: open_ai_api_key
+        ports:
+        - containerPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: pfe
+  labels:
+    app: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: "tidix/public:backend-image"
+        ports:
+        - containerPort: 3000
+
+

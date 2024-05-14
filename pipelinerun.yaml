@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1                                                 # Version de l'API Tekton utilisée
+kind: PipelineRun                                                              # Type d'objet : Exécution de pipeline
+metadata:
+  namespace: pfe
+  generateName: our-pipeline-ci-cd-run-                                          # Préfixe pour les noms générés des exécutions de pipeline
+spec:
+  pipelineRef:                                                                 # Référence au pipeline à exécuter
+    name: clone-build-push                                                     # Nom du pipeline à exécuter                                                    # GID du groupe pour les volumes montés
+  workspaces:                                                                  # Espaces de travail utilisés par le pipeline
+    - name: shared-data                                                        # Nom de l'espace de travail partagé
+      volumeClaimTemplate:                                                     # Modèle de demande de revendication de volume
+        spec:                                                                  # Spécification de la demande de revendication de volume
+          accessModes:                                                         # Modes d'accès au volume
+            - ReadWriteOnce                                                    # Mode de lecture-écriture unique
+          resources:                                                           # Ressources allouées au volume
+            requests:                                                          # Ressources demandées pour le volume
+              storage: 15Gi                                                     # Taille du stockage demandée (2 gigaoctets)
+    - name: docker-credentials                                                 # Nom de l'espace de travail pour les informations d'identification Docker
+      secret:                                                                  # Spécification d'un secret Kubernetes
+        secretName: docker-credentials                                         # Nom du secret contenant les informations d'identification Docker
+  params:                                                                      # Paramètres à fournir au pipeline
+    - name: repo-url                                                           # Nom du paramètre pour l'URL du dépôt
+      value: https://github.com/KhouloudBrn/pipeline-DevSecOps.git                             # Valeur de l'URL du dépôt
+    - name: image-reference-front                                                   # Nom du paramètre pour la référence d'image
+      value: tidix/public:frontend_image                                         # Valeur de la référence d'image
+    - name: image-reference-back                                                 # Nom du paramètre pour la référence d'image
+      value: tidix/public:backend_image

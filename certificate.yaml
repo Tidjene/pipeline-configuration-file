@@ -1,0 +1,29 @@
+# Déclaration de la version de l'API et du type de l'objet
+apiVersion: cert-manager.io/v1
+kind: Certificate
+
+# Métadonnées associées au certificat
+metadata:
+  # Nom du certificat
+  name: certificat
+  namespace: pfe
+# Spécification du certificat
+spec:
+  # Nom du secret où le certificat sera stocké
+  secretName: certificat-tls
+  
+  # Nom commun (Common Name) du certificat
+  commonName: yourimaginaryfriend.local
+
+  # Liste des noms de domaine associés au certificat
+  dnsNames:
+    - yourimaginaryfriend.local
+
+  # Référence à l'émetteur (Issuer) du certificat
+  issuerRef:
+    # Nom de l'émetteur
+    name: letsencrypt-production
+    
+    # Type d'émetteur (dans ce cas, ClusterIssuer)
+    kind: ClusterIssuer
+
