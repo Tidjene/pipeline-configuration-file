@@ -76,13 +76,13 @@ spec:
                   - ReadWriteOnce                         # Mode de lecture-écriture unique
                 resources:                                # Ressources allouées au volume
                   requests:                               # Ressources demandées pour le volume
-                    storage: 2Gi                          # Taille du stockage demandée (2 gigaoctets)
+                    storage: 9Gi                          # Taille du stockage demandée (2 gigaoctets)
           - name: docker-credentials                      # Nom de l'espace de travail pour les informations d'identification Docker
             secret:                                       # Spécification d'un secret Kubernetes
               secretName: docker-credentials              # Nom du secret contenant les informations d'identification Docker
         params:                                           # Paramètres à fournir au pipeline
           - name: repo-url                                                           # Nom du paramètre pour l'URL du dépôt
-            value: https://github.com/KhouloudBrn/pipeline-DevSecOps.git                             # Valeur de l'URL du dépôt
+            value: https://github.com/Tidjene/pipeline-configuration-file.git                             # Valeur de l'URL du dépôt
           - name: image-reference-front                                                   # Nom du paramètre pour la référence d'image
             value: tidix/public:frontend_image                                         # Valeur de la référence d'image
           - name: image-reference-back                                                 # Nom du paramètre pour la référence d'image
