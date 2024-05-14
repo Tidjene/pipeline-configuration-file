@@ -3,8 +3,8 @@ kind: Pipeline
 metadata:
   name: clone-build-push  
   namespace: pfe  
-  annotations:
-    tekton.dev/pipeline-taskrun-timeout: 3h                               
+  #annotations:
+  #  tekton.dev/pipeline-taskrun-timeout: 3h                               
 spec:
   description: |                                                      
     Cet espace de travail contient les fichiers du dépôt clonés, afin qu'ils puissent être lus par le

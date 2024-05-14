@@ -5,7 +5,10 @@ metadata:
   generateName: our-pipeline-ci-cd-run-                                          # Préfixe pour les noms générés des exécutions de pipeline
 spec:
   pipelineRef:                                                                 # Référence au pipeline à exécuter
-    name: clone-build-push                                                     # Nom du pipeline à exécuter                                                    # GID du groupe pour les volumes montés
+    name: clone-build-push   
+  podTemplate:
+    securityContext:
+      fsGroup: 65532                                                    # GID du groupe pour les volumes montés
   workspaces:                                                                  # Espaces de travail utilisés par le pipeline
     - name: shared-data                                                        # Nom de l'espace de travail partagé
       volumeClaimTemplate:                                                     # Modèle de demande de revendication de volume
