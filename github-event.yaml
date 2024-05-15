@@ -64,7 +64,7 @@ spec:
         generateName: our-pipeline-ci-cd-run-               # Préfixe pour les noms générés des exécutions de pipeline
       spec:
         pipelineRef:                                      # Référence au pipeline à exécuter
-          name: our-pipeline-ci-cd                          # Nom du pipeline
+          name: clone-build-push                          # Nom du pipeline
         podTemplate:                                      # Modèle de pod pour l'exécution du pipeline
           securityContext:                                # Contexte de sécurité du pod
             fsGroup: 65532                                # GID du groupe pour les volumes montés
