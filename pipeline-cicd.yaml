@@ -28,23 +28,9 @@ spec:
           workspace: shared-data                                         
       params:                                                                   
         - name: url                                                      
-          value: $(params.repo-url)                                   
-    - name: build-and-push-front-end          
-      runAfter: ["clonage-du-depot"]                                              
-      taskRef:
-        name: kaniko                                                     
-      workspaces:
-        - name: source                                               
-          workspace: shared-data         
-          subPath: frontend_Dockerfile
-        - name: dockerconfig                                                     
-          workspace: docker-credentials                                       
-      params:                                                                
-        - name: IMAGE                                                           
-          value: $(params.image-reference-front)      
-                                            
+          value: $(params.repo-url)                                                                                   
     - name: build-and-push-backend                                                       
-      runAfter: ["build-and-push-front-end"]                       
+      runAfter: ["clonage-du-depot"]                       
       taskRef:
         name: kaniko                                                
       workspaces:
@@ -56,6 +42,20 @@ spec:
       params:                                                                  
         - name: IMAGE                                                         
           value: $(params.image-reference-back) 
+    - name: build-and-push-front-end          
+      runAfter: ["build-and-push-backend"]                                              
+      taskRef:
+        name: kaniko                                                     
+      workspaces:
+        - name: source                                               
+          workspace: shared-data         
+          subPath: frontend_Dockerfile
+        - name: dockerconfig                                                     
+          workspace: docker-credentials                                       
+      params:                                                                
+        - name: IMAGE                                                           
+          value: $(params.image-reference-front)    
+
     - name: deployment                                                       
       runAfter: ["build-and-push-backend"]                       
       taskRef:

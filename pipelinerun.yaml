@@ -23,8 +23,8 @@ spec:
         secretName: docker-credentials                                         # Nom du secret contenant les informations d'identification Docker
   params:                                                                      # Paramètres à fournir au pipeline
     - name: repo-url                                                           # Nom du paramètre pour l'URL du dépôt
-      value: https://github.com/Tidjene/pipeline-configuration-file.git                             # Valeur de l'URL du dépôt
-    - name: image-reference-front                                                   # Nom du paramètre pour la référence d'image
-      value: tidix/public:frontend_image                                         # Valeur de la référence d'image
+      value: https://github.com/Tidjene/pipeline-configuration-file.git                             # Valeur de l'URL du dépôt                                        # Valeur de la référence d'image
     - name: image-reference-back                                                 # Nom du paramètre pour la référence d'image
       value: tidix/public:backend_image
+    - name: image-reference-front                                                   # Nom du paramètre pour la référence d'image
+      value: tidix/public:frontend_image 
