@@ -72,6 +72,8 @@ spec:
           value: v1.0.0
         - name: release_name
           value: backend-deployment
+        - name: release_namespace
+          value: "pfe"
         - name: overwrite_values
           value: "autoscaling.enabled=true,autoscaling.maxReplicas=3"    
       
@@ -91,6 +93,8 @@ spec:
           value: v1.0.0
         - name: release_name
           value: backend-deployment
+        - name: release_namespace
+          value: "pfe"
         - name: overwrite_values
           value: "autoscaling.enabled=true,autoscaling.maxReplicas=3"                                  
                                       
