@@ -56,19 +56,45 @@ spec:
         - name: IMAGE                                                           
           value: $(params.image-reference-front)    
 
-    - name: deployment                                                       
-      runAfter: ["build-and-push-backend"]                       
+    - name: backend-deployment                                                       
+      runAfter: ["build-and-push-front-end"]                       
       taskRef:
-        name: helm-upgrade-from-repo                                                     
+        name: helm-upgrade-from-source   
+      workspaces:
+        - name: source                                               
+          workspace: shared-data
+          persistentVolumeClaim:
+            claimName: my-source-back                                              
       params:                                                                  
-        - name: helm_repo
-          value: 
-        - name: chart_name
-          value: ...../....
-        - name: release_version
-          value: .....
+        - name: charts_dir
+          value: chart-backend
+        - name: releases_version
+          value: v1.0.0
         - name: release_name
-          value: .....
+          value: backend-deployment
+        - name: release_namespace
+          value: "pfe"
         - name: overwrite_values
-          value: autoscaling.enabled=true,autoscaling.maxReplicas=3                                      
+          value: "autoscaling.enabled=true,autoscaling.maxReplicas=3"    
+      
+    - name: frontend-deployment                                                       
+      runAfter: ["backend-deployment"]                       
+      taskRef:
+        name: helm-upgrade-from-source   
+      workspaces:
+        - name: source                                               
+          workspace: shared-data
+          persistentVolumeClaim:
+            claimName: my-source-front                                                
+      params:                                                                  
+        - name: charts_dir
+          value: chart-frontend
+        - name: releases_version
+          value: v1.0.0
+        - name: release_name
+          value: backend-deployment
+        - name: release_namespace
+          value: "pfe"
+        - name: overwrite_values
+          value: "autoscaling.enabled=true,autoscaling.maxReplicas=3"                                  
                                       
