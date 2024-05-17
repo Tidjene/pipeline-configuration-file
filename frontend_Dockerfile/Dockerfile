@@ -2,27 +2,27 @@
 FROM python:3.9-slim
 
 RUN apt-get update && apt-get install git -y
-
-RUN python -m venv .venv && . .venv/bin/activate
+# creation d'environnement virtuel et activation
+RUN python3 -m venv .venv && . .venv/bin/activate
 
 ENV PATH="/.venv/bin:$PATH"
 
 RUN pip install --upgrade pip
+RUN pip install gunicorn
+RUN git clone https://github.com/KhouloudBrn/YourImaginaryFriend.git
 
-RUN git clone https://github.com/KhouloudBrn/pipeline-DevSecOps.git
+#permission des fichiers
+RUN chmod -R 755 YourImaginaryFriend
 
-
-RUN chmod -R 755 pipeline-DevSecOps
-
-WORKDIR "/pipeline-DevSecOps/1_welcome/interne/Serv 6 chatbot/chatbot-main/chatbot-main"
-
+WORKDIR "/YourImaginaryFriend/chatbot-main/"
+#suppression de la base de donées d'index 
 RUN rm -rf handbook_faiss
 
-# Installez les dépendances de l'application Flask
-RUN pip install --no-cache-dir -r requirements.txt
+# Installation des dépendances de l'application Flask
+RUN pip install -r requirements.txt
 
-# Exposez le port sur lequel l'application Flask s'exécute
-EXPOSE 5000
+
+EXPOSE 10000
 
 # Commande pour exécuter l'application Flask lorsque le conteneur démarre
-CMD ["python", "rag_langchain_web.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:10000", "rag_langchain_web:app"]
