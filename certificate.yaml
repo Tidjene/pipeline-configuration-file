@@ -10,14 +10,14 @@ metadata:
 # Spécification du certificat
 spec:
   # Nom du secret où le certificat sera stocké
-  secretName: certificat-tls
+  secretName: web-ssl
   
   # Nom commun (Common Name) du certificat
-  commonName: yourimaginaryfriend.local
+  commonName: certificat
 
   # Liste des noms de domaine associés au certificat
   dnsNames:
-    - yourimaginaryfriend.local
+    - www.openmynd.org
 
   # Référence à l'émetteur (Issuer) du certificat
   issuerRef:
@@ -26,4 +26,4 @@ spec:
     
     # Type d'émetteur (dans ce cas, ClusterIssuer)
     kind: ClusterIssuer
-            
+

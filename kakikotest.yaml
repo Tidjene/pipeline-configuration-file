@@ -1,0 +1,24 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: kanikotest
+  namespace: pfe
+spec:
+  workspaces:
+    - name: source
+    - name: dockerconfig
+  params:
+    - name: IMAGE
+      type: string
+  steps:
+    - name: build-and-push
+      image: gcr.io/kaniko-project/executor:latest
+      script: |
+        /kaniko/executor --dockerfile=$1 --destination=$(params.IMAGE)
+      args:
+        - /workspace/source/Dockerfile
+      resources:
+        requests:
+          memory: "2Gi"
+        limits:
+          memory: "3Gi"

@@ -1,33 +1,16 @@
-# Déclaration de la version de l'API et du type de l'objet
+# issuer-lets-encrypt-staging.yaml
 apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-
-# Métadonnées associées à l'émetteur
+kind: Issuer
 metadata:
-  # Nom de l'émetteur
   name: letsencrypt-production
   namespace: pfe
-
-# Spécification de l'émetteur
 spec:
-  # Configuration spécifique à l'ACME (Automated Certificate Management Environment)
   acme:
-    # Adresse e-mail associée à l'émetteur pour les communications
-    email: tidiodg1@gmail.com
-    
-    # URL du serveur ACME de Let's Encrypt
     server: https://acme-v02.api.letsencrypt.org/directory
-    
-    # Référence au secret où la clé privée de l'émetteur est stockée
+    email: tidiodg1@gmail.com
     privateKeySecretRef:
-      # Nom du secret
-      name: issuer-letsencrypt-production
-
-    # Configuration des solveurs utilisés pour la validation
+      name: letsencrypt-production
     solvers:
-      # Utilisation du solveur HTTP01 pour la validation via HTTP
-      - http01:
-          # Configuration spécifique à l'ingress (utilisation de la classe NGINX)
-          ingress:
-            class: nginx
-
+    - http01:
+        ingress:
+          name: my-ingress

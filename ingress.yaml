@@ -1,37 +1,31 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-nginx-ingress-controller
+  name: my-ingress
   namespace: pfe
   annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.allow-http: "true"
+    kubernetes.io/ingress.global-static-ip-name: web-ip
 spec:
   tls:
-  - hosts:
-    - yourimaginaryfriend.local
-    secretName: certificat-tls
+    - secretName: web-ssl
+      hosts:
+        - www.openmynd.org
   rules:
-  - host: yourimaginaryfriend.local
-    http:
+  - http:
       paths:
-      - pathType: ImplementationSpecific
-        path: /
+      - path: /*
+        pathType: ImplementationSpecific
         backend:
           service:
             name: frontend-service
             port:
-              number: 5000
-      - pathType: ImplementationSpecific
-        path: /
-        backend:
-          service:
-            name: backend-service
-            port:
-              number: 3000
-      - pathType: Exact
+              number: 10000
+      - path: /event
+        pathType: ImplementationSpecific
         backend:
           service:
             name: el-github-listener
             port:
-              number: 8080
+              number: 9000
