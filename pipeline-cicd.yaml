@@ -62,12 +62,10 @@ spec:
         name: helm-upgrade-from-source   
       workspaces:
         - name: source                                               
-          workspace: shared-data
-          persistentVolumeClaim:
-            claimName: my-source-back                                              
+          workspace: shared-data                                             
       params:                                                                  
         - name: charts_dir
-          value: chart-backend
+          value: backend_chart
         - name: releases_version
           value: v1.0.0
         - name: release_name
@@ -83,12 +81,10 @@ spec:
         name: helm-upgrade-from-source   
       workspaces:
         - name: source                                               
-          workspace: shared-data
-          persistentVolumeClaim:
-            claimName: my-source-front                                                
+          workspace: shared-data                                               
       params:                                                                  
         - name: charts_dir
-          value: chart-frontend
+          value: frontend_chart
         - name: releases_version
           value: v1.0.0
         - name: release_name

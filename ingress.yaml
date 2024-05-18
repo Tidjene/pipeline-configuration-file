@@ -23,7 +23,7 @@ spec:
             port:
               number: 10000
       - path: /event
-        pathType: ImplementationSpecific
+        pathType: Exact
         backend:
           service:
             name: el-github-listener
