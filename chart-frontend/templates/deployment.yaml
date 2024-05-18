@@ -17,9 +17,12 @@ spec:
     spec:
       containers:
       - name: frontend-container
-        image: "tidix/public:frontend-image"
-        envFrom:
-        - configMapRef:
-            name: open_ai_api_key
+        image: "tidix/public:frontend"
         ports:
-        - containerPort: 8000
+        - containerPort: 10000
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: my-api-key
+              key: OPENAI_API_KEY
