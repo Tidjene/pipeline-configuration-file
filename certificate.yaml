@@ -26,4 +26,6 @@ spec:
     
     # Type d'émetteur (dans ce cas, ClusterIssuer)
     kind: ClusterIssuer
+     
+    
 
