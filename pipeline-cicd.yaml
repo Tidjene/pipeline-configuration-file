@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1                                                    
 kind: Pipeline                                                                   
 metadata:
-  name: clone-build-push  
+  name: our-pipeline-ci-cd  
   namespace: pfe  
   #annotations:
   #  tekton.dev/pipeline-taskrun-timeout: 3h                               

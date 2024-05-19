@@ -28,4 +28,4 @@ spec:
           service:
             name: el-github-listener
             port:
-              number: 9000
+              number: 8080

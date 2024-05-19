@@ -1,12 +1,14 @@
 apiVersion: v1                                                             # Version de l'API Kubernetes utilisée
 kind: ServiceAccount                                                       # Type d'objet : Compte de service
 metadata:
-  name: tekton-triggers-test                                               # Nom du compte de service
+  name: tekton-triggers-test
+  namespace: pfe                                               # Nom du compte de service
 ---
 apiVersion: rbac.authorization.k8s.io/v1                                   # Version de l'API RBAC Kubernetes utilisée
 kind: RoleBinding                                                          # Type d'objet : Liaison de rôle
 metadata:
-  name: triggers-test-eventlistener-binding                                # Nom de la liaison de rôle
+  name: triggers-test-eventlistener-binding
+  namespace: pfe                                # Nom de la liaison de rôle
 subjects:
 - kind: ServiceAccount                                                     # Type du sujet : Compte de service
   name: tekton-triggers-test                                               # Nom du compte de service
@@ -18,7 +20,8 @@ roleRef:
 apiVersion: rbac.authorization.k8s.io/v1                                   # Version de l'API RBAC Kubernetes utilisée
 kind: ClusterRoleBinding                                                   # Type d'objet : Liaison de rôle de cluster
 metadata:
-  name: triggers-test-eventlistener-clusterbinding                         # Nom de la liaison de rôle de cluster
+  name: triggers-test-eventlistener-clusterbinding
+  namespace: pfe                         
 subjects:
 - kind: ServiceAccount                                                     # Type du sujet : Compte de service
   name: tekton-triggers-test                                               # Nom du compte de service
