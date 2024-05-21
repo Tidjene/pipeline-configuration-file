@@ -8,9 +8,9 @@ metadata:
 spec:
   ports:
   - name: http
-    port: 10000
+    port: 11000
     protocol: TCP
-    targetPort: 10000
+    targetPort: 11000
   selector:
     app: chatbot
   type: NodePort

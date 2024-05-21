@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment
+  name: chatbot-deployment
   namespace: pfe
   labels:
-    app: frontend
+    app: chatbot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: chatbot
   template:
     metadata:
       labels:
-        app: frontend
+        app: chatbot
     spec:
       containers:
-      - name: frontend-container
-        image: "tidix/public:frontend"
+      - name: chatbot-container
+        image: "tidix/public:chatbot-v1.0"
         ports:
-        - containerPort: 10000
+        - containerPort: 11000
         env:
         - name: OPENAI_API_KEY
           valueFrom:

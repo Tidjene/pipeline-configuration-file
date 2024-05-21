@@ -29,3 +29,10 @@ spec:
             name: el-github-listener
             port:
               number: 8080
+      - path: /backend
+        pathType: Exact
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 3000

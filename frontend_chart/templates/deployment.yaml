@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-deployment
+  name: frontend
   namespace: pfe
   labels:
-    app: frontend
+    app: chatbot
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: frontend
+      app: chatbot
   template:
     metadata:
       labels:
-        app: frontend
+        app: chatbot
     spec:
       containers:
-      - name: frontend-container
-        image: "tidix/public:frontend"
+      - name: chatbot-container
+        image: "tidix/public:frontend-v1.0"
         ports:
         - containerPort: 10000
         env:
